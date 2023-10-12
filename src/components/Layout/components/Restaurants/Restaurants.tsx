@@ -1,42 +1,6 @@
 import { FC } from "react";
 import { Link } from "react-router-dom";
-
-export interface Restaurant {
-    name: string;
-    slug: string;
-    images: Images;
-    menu: Menu;
-    address?: Address;
-    _id: string;
-}
-
-export interface Images {
-    thumbnail: string;
-    owner: string;
-    banner: string;
-}
-
-export interface Menu {
-    lunch: Lunch[];
-    dinner: Dinner[];
-}
-
-export interface Lunch {
-    name: string;
-    price: number;
-}
-
-export interface Dinner {
-    name: string;
-    price: number;
-}
-
-export interface Address {
-    street: string;
-    city: string;
-    state: string;
-    zip: string;
-}
+// import { useFetchRestaurants } from "../../../../shared/hooks/use-fetch-restaurants";
 
 interface RestaurantsProps {
     // restaurants: Restaurant[];
@@ -138,6 +102,8 @@ const restaurants = [
 ];
 
 export const Restaurants: FC<RestaurantsProps> = () => {
+    // const [restaurants, error] = useFetchRestaurants();
+
     return (
         <div className="restaurants">
             <h2 className="page-header">Restaurants</h2>
