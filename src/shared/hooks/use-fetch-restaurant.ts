@@ -1,10 +1,4 @@
-import path from "path-browserify";
-import { useFetch } from "usehooks-ts";
 import { Restaurant } from "../types/restaurant";
-import { API_URL } from "./api-constants";
+import { useFetchFromPlaceMyOrderApi } from "./use-fetch-from-place-my-order-api";
 
-export const useFetchRestaurant = (id: string) => {
-  const { data, error } = useFetch<Restaurant>(path.join(API_URL, 'restaurants', id));
-
-  return [data, error] as const;
-};
+export const useFetchRestaurant = (id: string) => useFetchFromPlaceMyOrderApi<Restaurant>(`restaurants/${id}`);
