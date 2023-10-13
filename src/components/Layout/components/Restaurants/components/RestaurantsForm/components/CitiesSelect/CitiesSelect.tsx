@@ -1,25 +1,18 @@
+import { RestaurantsFormContext } from "@components/Layout/components/Restaurants/shared/contexts/RestaurantsFormContext";
 import { useFetchCities } from "@shared/hooks/useFetchCities";
 import { useLogError } from "@shared/hooks/useLogError";
-import { City } from "@shared/types/city";
-import { State } from "@shared/types/state";
-import { FC } from "react";
+import { FC, useContext } from "react";
 
-interface CitiesSelectProps {
-  selectedState: State;
-  selectedCity: City | null;
-  setSelectedCity: React.Dispatch<React.SetStateAction<City | null>>;
-}
+export const CitiesSelect: FC = () => {
+  const { selectedCity, setSelectedCity, selectedState } = useContext(
+    RestaurantsFormContext
+  );
 
-export const CitiesSelect: FC<CitiesSelectProps> = ({
-  selectedState,
-  selectedCity,
-  setSelectedCity,
-}) => {
   const {
     state: citiesState,
     data: cities,
     error,
-  } = useFetchCities(selectedState.short);
+  } = useFetchCities(selectedState!.short);
 
   useLogError(error);
 
@@ -30,7 +23,11 @@ export const CitiesSelect: FC<CitiesSelectProps> = ({
   return (
     <>
       <label htmlFor="cities">City</label>
-      <select id="cities" className="formControl" onChange={(event) => onCityChange(event.target.value)}>
+      <select
+        id="cities"
+        className="formControl"
+        onChange={(event) => onCityChange(event.target.value)}
+      >
         {citiesState === "failed" && <option value="">Error :(</option>}
         {citiesState === "loading" && <option value="">Loading...</option>}
         {citiesState === "loaded" && (
