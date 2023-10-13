@@ -40,7 +40,7 @@ function useFetchWrapper<T>(url: string, params: Record<string, boolean | string
   }
 
   if (res) {
-    return { state: 'loaded', data: res.data };
+    return { state: 'loaded', data: res.data ? res.data : (res as T) };
   }
 
   return { state: 'loading' };

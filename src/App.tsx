@@ -3,6 +3,7 @@ import { Home } from "./components/Layout/components/Home";
 import { Restaurants } from "./components/Layout/components/Restaurants";
 import { Layout } from "./components/Layout";
 import "place-my-order-assets/css/place-my-order-assets.css";
+import { RestaurantDetail } from "@components/Layout/components/RestaurantDetail";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="restaurants" element={<Restaurants />} />
+            <Route path="restaurants/:slug" element={<RestaurantDetail />} />
             <Route
               path="*"
               element={<h2>404</h2>}
