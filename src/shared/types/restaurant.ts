@@ -2,7 +2,7 @@ export interface Restaurant {
   name: string;
   slug: string;
   images: Images;
-  menu: Menu;
+  menu?: Menu;
   address?: Address;
   _id: string;
 }
@@ -14,16 +14,11 @@ export interface Images {
 }
 
 export interface Menu {
-  lunch: Lunch[];
-  dinner: Dinner[];
+  lunch?: MenuItem[];
+  dinner?: MenuItem[];
 }
 
-export interface Lunch {
-  name: string;
-  price: number;
-}
-
-export interface Dinner {
+export interface MenuItem {
   name: string;
   price: number;
 }
