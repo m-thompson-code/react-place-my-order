@@ -26,13 +26,24 @@ interface FailedApiState extends _ApiState {
 
 type ApiState<T> = LoadingApiState | LoadedApiState<T> | FailedApiState;
 
-function useFetchWrapper<T>(url: string): ApiState<T> {
-  const { data, error } = useFetch<{ data: T }>(`http://localhost:7070/${url}`);
-  let state: 'loading' | 'loaded' | 'failed' = 'loading';
+function useFetchWrapper<T>(url: string, params: Record<string, boolean | string | number> = {}, options?: Parameters<typeof useFetch>[1]): ApiState<T> {
+  const urlInstance = new URL(`http://localhost:7070/${url}`);
 
-  if (error) { state = 'failed'} else if (data) { state = 'loaded'; }
+  for (const key in params) {
+    urlInstance.searchParams.append(key, params[key].toString());
+  }
 
-  return { state, data: data?.data, error } as ApiState<T>;
+  const { data: res, error } = useFetch<{ data: T }>(urlInstance.toString(), options);
+
+  if (error) {
+    return { state: 'failed', error };
+  }
+
+  if (res) {
+    return { state: 'loaded', data: res.data };
+  }
+
+  return { state: 'loading' };
 }
 
 export const useFetchFromPlaceMyOrderApi = useFetchWrapper;
