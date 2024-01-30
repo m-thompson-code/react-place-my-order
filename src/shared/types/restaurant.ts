@@ -1,3 +1,5 @@
+import { MenuItem } from "./menu-item";
+
 export interface Restaurant {
   name: string;
   slug: string;
@@ -16,11 +18,6 @@ export interface Images {
 export interface Menu {
   lunch?: MenuItem[];
   dinner?: MenuItem[];
-}
-
-export interface MenuItem {
-  name: string;
-  price: number;
 }
 
 export interface Address {

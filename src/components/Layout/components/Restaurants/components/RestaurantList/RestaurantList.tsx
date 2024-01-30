@@ -1,22 +1,30 @@
-import { useFetchRestaurants } from "@shared/hooks/useFetchRestaurants";
-import { FC, useContext } from "react";
+import { FC } from "react";
 import { RestaurantListItem } from "./components/RestaurantListItem";
 import { useLogError } from "@shared/hooks/useLogError";
-import { RestaurantsFormContext } from "../../shared/contexts/RestaurantsFormContext";
+import { useRestaurantsFormContext } from "../../shared/contexts/RestaurantsFormContext";
+import { useMoo } from "@shared/hooks/useMoo";
+import { fetchRestaurants } from "@shared/services/placeMyOrderApiService/placeMyOrderApiService";
 
 export const RestaurantList: FC = () => {
-  const { selectedCity, selectedState } = useContext(RestaurantsFormContext);
+  const { selectedCity, selectedState } = useRestaurantsFormContext();
 
   const {
-    state: restaurantsState,
-    data: restaurants,
+    status: restaurantsState,
+    value: restaurants,
     error,
-  } = useFetchRestaurants(selectedState!.short, selectedCity!.name);
+  } = useMoo((stateShort?: string | undefined, cityName?: string | null) => {
+    if (!stateShort || !cityName) {
+      return { status: 'idle' };
+    }
+
+    return fetchRestaurants(stateShort, cityName);
+  }, [selectedState?.short, selectedCity?.name]);
 
   useLogError(error);
 
-  return <>
-  {restaurantsState === "failed" && (
+  return (
+    <>
+      {restaurantsState === "failed" && (
         <div className="restaurant">{error.toString()}</div>
       )}
       {restaurantsState === "loading" && (
@@ -26,5 +34,6 @@ export const RestaurantList: FC = () => {
         restaurants.map((restaurant) => (
           <RestaurantListItem key={restaurant.slug} restaurant={restaurant} />
         ))}
-  </>
+    </>
+  );
 };

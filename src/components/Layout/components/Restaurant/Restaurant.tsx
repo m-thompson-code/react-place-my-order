@@ -2,19 +2,26 @@ import { FC } from "react";
 import { RestaurantContext } from "./shared/contexts/RestaurantContext/RestaurantContext";
 import { useLogError } from "@shared/hooks/useLogError";
 import { Outlet, useParams } from "react-router-dom";
-import { useFetchRestaurant } from "@shared/hooks/useFetchRestaurant";
+import { useMoo } from "@shared/hooks/useMoo";
+import { fetchRestaurant } from "@shared/services/placeMyOrderApiService/placeMyOrderApiService";
 
 export const Restaurant: FC = () => {
-  const { slug } = useParams();
+  const { slug } = useParams<{ slug: string}>();
 
-  const { state, data: restaurant, error } = useFetchRestaurant(slug!);
+  const { status, value: restaurant, error } = useMoo((slug: string | undefined) => {
+    if (!slug) {
+      return { status: 'idle' };
+    }
+
+    return fetchRestaurant(slug);
+  }, [slug]);
 
   useLogError(error);
 
   return <>
-    {state === "failed" && <div>{JSON.stringify(error)}</div>}
-    {state === "loading" && <div className="loading"></div>}
-    {state === 'loaded' && <RestaurantContext.Provider value={{restaurant}}>
+    {status === "failed" && <div>{JSON.stringify(error)}</div>}
+    {status === "loading" && <div className="loading"></div>}
+    {status === 'loaded' && <RestaurantContext.Provider value={{restaurant}}>
       <Outlet />
     </RestaurantContext.Provider>
   }</>

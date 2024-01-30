@@ -43,10 +43,10 @@ export const OrderForm: FC = () => {
   <form onSubmit={() => onSubmit()}>
     <Tabs>
       {lunchItems.length && <Tab eventKey="lunch" title="Lunch Menu">
-        <OrderCheckboxGroup items={lunchItems} setItems={setLunchItems}></OrderCheckboxGroup>
+        <OrderCheckboxGroup items={lunchItems} setItems={setLunchItems}/>
       </Tab>}
       {dinnerItems.length && <Tab eventKey="dinner" title="Dinner Menu">
-        <OrderCheckboxGroup items={dinnerItems} setItems={setDinnerItems}></OrderCheckboxGroup>
+        <OrderCheckboxGroup items={dinnerItems} setItems={setDinnerItems}/>
       </Tab>}
     </Tabs>
 

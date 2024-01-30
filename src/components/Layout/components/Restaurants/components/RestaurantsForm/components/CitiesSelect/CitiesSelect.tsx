@@ -1,18 +1,23 @@
-import { RestaurantsFormContext } from "@components/Layout/components/Restaurants/shared/contexts/RestaurantsFormContext";
-import { useFetchCities } from "@shared/hooks/useFetchCities";
+import { useRestaurantsFormContext } from "@components/Layout/components/Restaurants/shared/contexts/RestaurantsFormContext";
 import { useLogError } from "@shared/hooks/useLogError";
-import { FC, useContext } from "react";
+import { useMoo } from "@shared/hooks/useMoo";
+import { fetchCities } from "@shared/services/placeMyOrderApiService/placeMyOrderApiService";
+import { FC } from "react";
 
 export const CitiesSelect: FC = () => {
-  const { selectedCity, setSelectedCity, selectedState } = useContext(
-    RestaurantsFormContext
-  );
+  const { selectedCity, setSelectedCity, selectedState } = useRestaurantsFormContext();
 
   const {
-    state: citiesState,
-    data: cities,
+    status: citiesState,
+    value: cities,
     error,
-  } = useFetchCities(selectedState!.short);
+  } = useMoo((stateShort?: string | undefined) => {
+    if (!stateShort) {
+      return { status: 'idle' };
+    }
+
+    return fetchCities(stateShort);
+  }, [selectedState?.short]);
 
   useLogError(error);
 

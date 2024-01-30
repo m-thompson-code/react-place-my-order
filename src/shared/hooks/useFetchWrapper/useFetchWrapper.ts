@@ -26,14 +26,18 @@ interface FailedApiState extends _ApiState {
 
 type ApiState<T> = LoadingApiState | LoadedApiState<T> | FailedApiState;
 
-function useFetchWrapper<T>(url: string, params: Record<string, boolean | string | number> = {}, options?: Parameters<typeof useFetch>[1]): ApiState<T> {
+function useFetchWrapper<T>(url: string, options: { params?: Record<string, boolean | string | number>, options?: Parameters<typeof useFetch>[1] } = {}): ApiState<T> {
   const urlInstance = new URL(`http://localhost:7070/${url}`);
 
-  for (const key in params) {
-    urlInstance.searchParams.append(key, params[key].toString());
+  const { params, options: fetchOptions } = options;
+
+  if (params) {
+    for (const key in params) {
+      urlInstance.searchParams.append(key, params[key].toString());
+    }
   }
 
-  const { data: res, error } = useFetch<{ data: T }>(urlInstance.toString(), options);
+  const { data: res, error } = useFetch<{ data: T }>(urlInstance.toString(), fetchOptions);
 
   if (error) {
     return { state: 'failed', error };
